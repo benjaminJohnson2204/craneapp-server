@@ -17,9 +17,9 @@ router.get("/:questionId", async (req, res) => {
   const question = await findQuestionById(req.params.questionId);
   const options = [];
   for (const optionId of question.options) {
-    options.append(await findOptionById(optionId));
+    options.push(await findOptionById(optionId));
   }
-  res.json({ question: { ...question, options: options } });
+  res.json({ question: question, options: options });
 });
 
 module.exports = router;
