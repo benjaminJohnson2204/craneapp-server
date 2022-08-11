@@ -13,7 +13,7 @@ router.get("/category/:categoryId", async (req, res) => {
   });
 });
 
-router.get("/questionId", async (req, res) => {
+router.get("/:questionId", async (req, res) => {
   const question = await findQuestionById(req.params.questionId);
   const options = [];
   for (const optionId of question.options) {
