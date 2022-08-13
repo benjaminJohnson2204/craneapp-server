@@ -243,4 +243,19 @@ describe("Question Tests", () => {
         done();
       });
   });
+
+  it("Get fraction of questions answered correctly for each category", (done) => {
+    chai
+      .request(app)
+      .get(`/question/fractionComplete`)
+      .set("x-auth-token", token)
+      .end((err, res) => {
+        assert.isNull(err);
+        assert.equal(res.status, 200);
+        assert.property(res.body, "Test Category");
+        assert.equal(res.body["Test Category"].total, 1);
+        assert.equal(res.body["Test Category"].correct, 1);
+        done();
+      });
+  });
 });

@@ -5,12 +5,32 @@ const {
 } = require("../db/services/question");
 const { UserAnswer } = require("../db/models/userAnswer");
 const { ensureAuthenticated } = require("./auth");
+const { Question } = require("../db/models/question");
 
 router.get("/category/:category", async (req, res) => {
   let questions = await getQuestionsUnderCategory(req.params.category);
   res.json({
     questions: questions,
   });
+});
+
+// Get what fraction of questions under each category the user has correctly answered
+router.get("/fractionComplete", ensureAuthenticated, async (req, res) => {
+  const result = {};
+  const allUserAnswers = await UserAnswer.find({ user: req.user });
+  for (const userAnswer of allUserAnswers) {
+    const question = await findQuestionById(userAnswer.question);
+    if (!result.hasOwnProperty(question.category)) {
+      result[question.category] = {
+        total: (await getQuestionsUnderCategory(question.category)).length,
+        correct: 0,
+      };
+    }
+    if (userAnswer.answeredCorrectly) {
+      result[question.category].correct += 1;
+    }
+  }
+  res.json(result);
 });
 
 router.get("/:questionId", async (req, res) => {
