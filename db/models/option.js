@@ -1,13 +1,12 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
+// const optionSchema = new mongoose.Schema({
+//     text : String,
+//     isCorrect : Boolean
+// });
 
-const optionSchema = new mongoose.Schema({
-    text : String,
-    isCorrect : Boolean
-});
+// const Option = mongoose.model("Option", optionSchema);
 
-const Option = mongoose.model("Option", optionSchema);
-
-module.exports = {
-    Option
-};
+// module.exports = {
+//     Option
+// };
