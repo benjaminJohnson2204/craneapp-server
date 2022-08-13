@@ -10,7 +10,7 @@ const optionSchema = new mongoose.Schema({
 
 const questionSchema = new mongoose.Schema({
   questionText: String,
-  category: { type: ObjectId, ref: "Category" },
+  category: String,
   options: [optionSchema],
 });
 

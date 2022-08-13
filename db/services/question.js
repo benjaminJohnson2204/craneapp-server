@@ -1,7 +1,4 @@
 const { Question } = require("../models/question");
-const { Category } = require("../models/category");
-const { Option } = require("../models/option");
-const { findOptionById } = require("./option");
 
 const findQuestionById = async (id) => {
   try {
@@ -13,9 +10,9 @@ const findQuestionById = async (id) => {
   }
 };
 
-const getQuestionsUnderCategory = async (categoryId) => {
+const getQuestionsUnderCategory = async (category) => {
   try {
-    let questions = await Question.find({ category: categoryId });
+    let questions = await Question.find({ category: category });
     return questions;
   } catch (error) {
     console.error(error.message);

@@ -1,25 +1,42 @@
 const router = require("express").Router();
-const passport = require("passport");
-const { findOptionById } = require("../db/services/option");
 const {
   getQuestionsUnderCategory,
   findQuestionById,
 } = require("../db/services/question");
+const { UserAnswer } = require("../db/models/userAnswer");
+const { ensureAuthenticated } = require("./auth");
 
-router.get("/category/:categoryId", async (req, res) => {
-  let questions = await getQuestionsUnderCategory(req.params.categoryId);
+router.get("/category/:category", async (req, res) => {
+  let questions = await getQuestionsUnderCategory(req.params.category);
   res.json({
-    questions: questions /*, answeredQuestions : req.user.answeredQuestions*/,
+    questions: questions,
   });
 });
 
 router.get("/:questionId", async (req, res) => {
   const question = await findQuestionById(req.params.questionId);
-  const options = [];
-  for (const optionId of question.options) {
-    options.push(await findOptionById(optionId));
-  }
-  res.json({ question: question, options: options });
+  res.json({ question: question });
 });
+
+// Get what fraction of questions under a category the user has correctly answered
+router.get(
+  "/fractionComplete/:category",
+  ensureAuthenticated,
+  async (req, res) => {
+    let questions = await getQuestionsUnderCategory(req.params.category);
+    let correctAnswers = 0;
+    const allUserAnswers = await UserAnswer.find({ user: req.user });
+    for (const userAnswer of allUserAnswers) {
+      if (!userAnswer.answeredCorrectly) {
+        continue;
+      }
+      const question = await findQuestionById(userAnswer.question);
+      if (question.category === req.params.category) {
+        correctAnswers++;
+      }
+    }
+    res.json({ total: questions.length, correct: correctAnswers });
+  }
+);
 
 module.exports = router;

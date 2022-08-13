@@ -6,7 +6,6 @@ const mongoUnit = require("mongo-unit");
 const { User } = require("../db/models/user");
 
 const assert = chai.assert;
-const expect = chai.expect;
 chai.use(chaiHttp);
 
 let token;
