@@ -3,6 +3,7 @@ const {
   getQuestionsUnderCategory,
   findQuestionById,
 } = require("../db/services/question");
+const { getAllCategories } = require("../db/services/category");
 const { UserAnswer } = require("../db/models/userAnswer");
 const { ensureAuthenticated } = require("./auth");
 const { Question } = require("../db/models/question");
@@ -18,14 +19,15 @@ router.get("/category/:category", async (req, res) => {
 router.get("/fractionComplete", ensureAuthenticated, async (req, res) => {
   const result = {};
   const allUserAnswers = await UserAnswer.find({ user: req.user });
+  const categories = await getAllCategories();
+  for (const category of categories) {
+    result[category] = {
+      total: (await getQuestionsUnderCategory(category)).length,
+      correct: 0,
+    };
+  }
   for (const userAnswer of allUserAnswers) {
     const question = await findQuestionById(userAnswer.question);
-    if (!result.hasOwnProperty(question.category)) {
-      result[question.category] = {
-        total: (await getQuestionsUnderCategory(question.category)).length,
-        correct: 0,
-      };
-    }
     if (userAnswer.answeredCorrectly) {
       result[question.category].correct += 1;
     }

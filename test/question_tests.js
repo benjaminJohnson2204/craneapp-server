@@ -65,6 +65,7 @@ describe("Question Tests", () => {
         assert.isNull(err);
         assert.equal(res.status, 200);
         assert.equal(res.body.categories.length, 1);
+        console.log(res.body.categories);
         assert.equal(res.body.categories[0], "Test Category");
         done();
       });
@@ -92,6 +93,35 @@ describe("Question Tests", () => {
         assert.equal(res.status, 200);
         assert.equal(res.body.question.questionText, "Test Question");
         assert.equal(res.body.question.options.length, 3);
+        done();
+      });
+  });
+
+  it("Get fraction of questions answered by category with no questions answered", (done) => {
+    chai
+      .request(app)
+      .get(`/question/fractionComplete/Test Category`)
+      .set("x-auth-token", token)
+      .end((err, res) => {
+        assert.isNull(err);
+        assert.equal(res.status, 200);
+        assert.equal(res.body.total, 1);
+        assert.equal(res.body.correct, 0);
+        done();
+      });
+  });
+
+  it("Get fraction of questions answered total with no questions answered", (done) => {
+    chai
+      .request(app)
+      .get(`/question/fractionComplete`)
+      .set("x-auth-token", token)
+      .end((err, res) => {
+        assert.isNull(err);
+        assert.equal(res.status, 200);
+        assert.property(res.body, "Test Category");
+        assert.equal(res.body["Test Category"].total, 1);
+        assert.equal(res.body["Test Category"].correct, 0);
         done();
       });
   });
