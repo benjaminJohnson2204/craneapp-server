@@ -119,9 +119,10 @@ describe("Question Tests", () => {
       .end((err, res) => {
         assert.isNull(err);
         assert.equal(res.status, 200);
-        assert.property(res.body, "Test Category");
-        assert.equal(res.body["Test Category"].total, 1);
-        assert.equal(res.body["Test Category"].correct, 0);
+        assert.equal(res.body.length, 1);
+        assert.equal(res.body[0].category, "Test Category");
+        assert.equal(res.body[0].total, 1);
+        assert.equal(res.body[0].correct, 0);
         done();
       });
   });
@@ -282,9 +283,10 @@ describe("Question Tests", () => {
       .end((err, res) => {
         assert.isNull(err);
         assert.equal(res.status, 200);
-        assert.property(res.body, "Test Category");
-        assert.equal(res.body["Test Category"].total, 1);
-        assert.equal(res.body["Test Category"].correct, 1);
+        assert.equal(res.body.length, 1);
+        assert.equal(res.body[0].category, "Test Category");
+        assert.equal(res.body[0].total, 1);
+        assert.equal(res.body[0].correct, 1);
         done();
       });
   });

@@ -32,7 +32,15 @@ router.get("/fractionComplete", ensureAuthenticated, async (req, res) => {
       result[question.category].correct += 1;
     }
   }
-  res.json(result);
+  const list = [];
+  for (const category of Object.keys(result)) {
+    list.push({
+      category: category,
+      total: result[category]["total"],
+      correct: result[category]["correct"],
+    });
+  }
+  res.json(list);
 });
 
 router.get("/:questionId", async (req, res) => {
