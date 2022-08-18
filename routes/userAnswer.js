@@ -17,6 +17,7 @@ router.post("/answer", ensureAuthenticated, async (req, res) => {
       .status(400)
       .json({ error: "Question already answered with that answer" });
   }
+  console.log("Question id: " + req.body.questionId);
   userAnswer = await addUserAnswer(
     req.user,
     req.body.questionId,
