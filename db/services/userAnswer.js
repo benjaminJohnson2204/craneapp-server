@@ -5,7 +5,7 @@ const addUserAnswer = async (user, questionId, selectedOptionIndex) => {
   try {
     let question = await findQuestionById(questionId);
     let correctOption = getCorrectOption(question);
-    let answeredCorrectly = selectedOptionIndex === correctOption.index;
+    let answeredCorrectly = selectedOptionIndex == correctOption.index;
     let userAnswer = await UserAnswer.create({
       user: user._id,
       question: questionId,
