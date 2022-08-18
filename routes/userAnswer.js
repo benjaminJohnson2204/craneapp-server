@@ -53,4 +53,40 @@ router.get("/question/:questionId", ensureAuthenticated, async (req, res) => {
   res.json({ userAnswers: userAnswers });
 });
 
+// Reset ALL answered questions
+router.post("/reset", ensureAuthenticated, async (req, res) => {
+  await UserAnswer.deleteMany({ user: req.user });
+  res.json("Successfully reset all answered questions");
+});
+
+// Reset all answered questions under a certain category
+router.post(
+  "/reset/category/:category",
+  ensureAuthenticated,
+  async (req, res) => {
+    const allUserAnswers = await UserAnswer.find({ user: req.user });
+    for (const userAnswer of allUserAnswers) {
+      const question = await findQuestionById(userAnswer.question);
+      if (question.category === req.params.category) {
+        console.log(userAnswer);
+        await userAnswer.remove();
+      }
+    }
+    res.json("Successfully reset answered questions under category");
+  }
+);
+
+// Reset answer(s) to a certain question
+router.post(
+  "/reset/question/:questionId",
+  ensureAuthenticated,
+  async (req, res) => {
+    await UserAnswer.deleteMany({
+      user: req.user,
+      question: req.params.questionId,
+    });
+    res.json("Successfully reset answer(s) to question");
+  }
+);
+
 module.exports = router;

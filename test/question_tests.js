@@ -65,7 +65,6 @@ describe("Question Tests", () => {
         assert.isNull(err);
         assert.equal(res.status, 200);
         assert.equal(res.body.categories.length, 1);
-        console.log(res.body.categories);
         assert.equal(res.body.categories[0], "Test Category");
         done();
       });
@@ -288,6 +287,27 @@ describe("Question Tests", () => {
         assert.equal(res.body[0].total, 1);
         assert.equal(res.body[0].correct, 1);
         done();
+      });
+  });
+
+  it("Reset answers to a specific question", (done) => {
+    chai
+      .request(app)
+      .post(`/userAnswer/reset/question/${testQuestion._id}`)
+      .set("x-auth-token", token)
+      .end((err, res) => {
+        assert.isNull(err);
+        assert.equal(res.status, 200);
+        chai
+          .request(app)
+          .get("/userAnswer/all")
+          .set("x-auth-token", token)
+          .end((err, res) => {
+            assert.isNull(err);
+            assert.equal(res.status, 200);
+            assert.equal(res.body.userAnswers.length, 0);
+            done();
+          });
       });
   });
 });
