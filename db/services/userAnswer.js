@@ -12,8 +12,6 @@ const addUserAnswer = async (user, questionId, selectedOptionIndex) => {
       selectedOptionIndex: selectedOptionIndex,
       answeredCorrectly: answeredCorrectly,
     });
-    user.answeredQuestions.push(userAnswer._id);
-    await user.save();
     return userAnswer;
   } catch (error) {
     console.error(error.message);
